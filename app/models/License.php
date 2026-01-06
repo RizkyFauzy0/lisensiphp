@@ -180,10 +180,22 @@ class License {
             $domain = substr($domain, 2); // Remove *. prefix for validation
         }
 
-        // Regex untuk domain dan subdomain
-        // Allows: domain.com, sub.domain.com, sub.sub.domain.com
-        $pattern = '/^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/';
-        return preg_match($pattern, $domain) === 1;
+        // Regex for domain and subdomain validation
+        // Pattern explanation:
+        // - Each label: starts/ends with alphanumeric, may have hyphens in middle
+        // - Multiple labels separated by dots
+        // - Must have at least 2 labels (domain + TLD)
+        // - TLD: at least 2 characters
+        $pattern = '/^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/';
+        
+        // Additional check: TLD must be at least 2 characters
+        if (preg_match($pattern, $domain) === 1) {
+            $parts = explode('.', $domain);
+            $tld = end($parts);
+            return strlen($tld) >= 2;
+        }
+        
+        return false;
     }
 
     /**
@@ -208,8 +220,10 @@ class License {
                 return true;
             }
 
-            // Match any subdomain
-            if (substr($requestDomain, -strlen('.' . $baseDomain)) === '.' . $baseDomain) {
+            // Match any subdomain - ensure proper subdomain boundary
+            // The request domain must end with ".<baseDomain>" to be a valid subdomain
+            $suffix = '.' . $baseDomain;
+            if (substr($requestDomain, -strlen($suffix)) === $suffix) {
                 return true;
             }
         }
