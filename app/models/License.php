@@ -230,4 +230,25 @@ class License {
 
         return false;
     }
+
+    /**
+     * Get actual status based on expiration date
+     * 
+     * @return string Actual status (active, expired, suspended)
+     */
+    public function getActualStatus() {
+        if ($this->expires_at && strtotime($this->expires_at) < time()) {
+            return 'expired';
+        }
+        return $this->status;
+    }
+
+    /**
+     * Check if license is expired based on expiration date
+     * 
+     * @return bool True if expired, false otherwise
+     */
+    public function isExpired() {
+        return $this->expires_at && strtotime($this->expires_at) < time();
+    }
 }

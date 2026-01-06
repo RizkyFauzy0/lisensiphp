@@ -142,6 +142,9 @@ ob_start();
             </dl>
 
             <div class="mt-6 flex flex-wrap gap-3">
+                <a href="/documentation?api_key=<?= urlencode($license['api_key']) ?>&domain=<?= urlencode($license['domain']) ?>" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
+                    <i class="fas fa-book mr-2"></i>Lihat Dokumentasi
+                </a>
                 <form method="POST" action="/licenses/regenerate-api-key" onsubmit="return confirm('Yakin ingin me-regenerate API Key? API Key lama tidak akan bisa digunakan lagi.');">
                     <input type="hidden" name="id" value="<?= $license['id'] ?>">
                     <button type="submit" class="px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">

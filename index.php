@@ -21,6 +21,7 @@ require_once APP_PATH . '/controllers/DashboardController.php';
 require_once APP_PATH . '/controllers/LicenseController.php';
 require_once APP_PATH . '/controllers/UserController.php';
 require_once APP_PATH . '/controllers/ApiController.php';
+require_once APP_PATH . '/controllers/DocumentationController.php';
 
 // Simple router
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -105,6 +106,11 @@ switch ($uri) {
     case 'users/delete':
         $controller = new UserController();
         $controller->delete();
+        break;
+
+    case 'documentation':
+        $controller = new DocumentationController();
+        $controller->index();
         break;
 
     default:
