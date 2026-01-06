@@ -61,8 +61,8 @@ class ApiController {
             return;
         }
 
-        // Check domain match
-        if ($license['domain'] !== $domain) {
+        // Check domain match (with wildcard support)
+        if (!License::isDomainMatch($license['domain'], $domain)) {
             $this->apiLogModel->create($license['id'], $ipAddress, $domain, 'failed', 'Domain tidak cocok');
             $this->sendResponse([
                 'status' => 'invalid',

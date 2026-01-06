@@ -165,4 +165,55 @@ class License {
         $sql = "UPDATE licenses SET status = 'expired' WHERE expires_at <= CURDATE() AND status = 'active'";
         return $this->db->query($sql);
     }
+
+    /**
+     * Validate domain format (including subdomain and wildcard)
+     * Accepts: domain.com, sub.domain.com, *.domain.com
+     */
+    public static function isValidDomain($domain) {
+        if (empty($domain)) {
+            return false;
+        }
+
+        // Allow wildcard prefix
+        if (strpos($domain, '*.') === 0) {
+            $domain = substr($domain, 2); // Remove *. prefix for validation
+        }
+
+        // Regex untuk domain dan subdomain
+        // Allows: domain.com, sub.domain.com, sub.sub.domain.com
+        $pattern = '/^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$/';
+        return preg_match($pattern, $domain) === 1;
+    }
+
+    /**
+     * Check if request domain matches license domain (with wildcard support)
+     * 
+     * @param string $licenseDomain Domain from license (may contain wildcard)
+     * @param string $requestDomain Domain from request
+     * @return bool True if domains match
+     */
+    public static function isDomainMatch($licenseDomain, $requestDomain) {
+        // Exact match
+        if ($licenseDomain === $requestDomain) {
+            return true;
+        }
+
+        // Wildcard match (*.example.com)
+        if (strpos($licenseDomain, '*.') === 0) {
+            $baseDomain = substr($licenseDomain, 2); // Remove *.
+
+            // Match exact base domain
+            if ($requestDomain === $baseDomain) {
+                return true;
+            }
+
+            // Match any subdomain
+            if (substr($requestDomain, -strlen('.' . $baseDomain)) === '.' . $baseDomain) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

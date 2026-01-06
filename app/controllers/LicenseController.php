@@ -37,9 +37,9 @@ class LicenseController {
                 exit;
             }
 
-            // Validate domain format
-            if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/', $domain)) {
-                $_SESSION['error'] = 'Format domain tidak valid';
+            // Validate domain format (supports subdomain and wildcard)
+            if (!License::isValidDomain($domain)) {
+                $_SESSION['error'] = 'Format domain tidak valid. Gunakan format: domain.com, sub.domain.com, atau *.domain.com';
                 header('Location: /licenses/create');
                 exit;
             }
@@ -122,9 +122,9 @@ class LicenseController {
                 exit;
             }
 
-            // Validate domain format
-            if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/', $domain)) {
-                $_SESSION['error'] = 'Format domain tidak valid';
+            // Validate domain format (supports subdomain and wildcard)
+            if (!License::isValidDomain($domain)) {
+                $_SESSION['error'] = 'Format domain tidak valid. Gunakan format: domain.com, sub.domain.com, atau *.domain.com';
                 header('Location: /licenses/edit?id=' . $id);
                 exit;
             }
