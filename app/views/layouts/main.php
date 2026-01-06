@@ -218,8 +218,9 @@
 
         // Close menu on menu item click (mobile only)
         if (sidebar) {
-            document.querySelectorAll('#sidebar a').forEach(link => {
-                link.addEventListener('click', () => {
+            var sidebarLinks = document.querySelectorAll('#sidebar a');
+            Array.from(sidebarLinks).forEach(function(link) {
+                link.addEventListener('click', function() {
                     if (window.innerWidth < 1024) {
                         closeSidebar();
                     }

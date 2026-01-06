@@ -26,7 +26,8 @@ class LicenseValidator {
     public function __construct($apiUrl, $apiKey, $domain = null) {
         $this->apiUrl = rtrim($apiUrl, '/');
         $this->apiKey = $apiKey;
-        $this->domain = $domain ?: ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'unknown');
+        // Prefer SERVER_NAME over HTTP_HOST for security (HTTP_HOST can be manipulated)
+        $this->domain = $domain ?: ($_SERVER['SERVER_NAME'] ?? $_SERVER['HTTP_HOST'] ?? 'unknown');
     }
     
     /**
@@ -89,6 +90,7 @@ class LicenseValidator {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeout);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2); // Verify SSL certificate hostname
         
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -296,8 +298,8 @@ class LicenseValidator {
         $safeTitle = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
         $safeMessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
         $safeSupportEmail = htmlspecialchars($this->supportEmail, ENT_QUOTES, 'UTF-8');
-        // Gradient is from our controlled list, but still validate it contains only CSS-safe characters
-        $safeGradient = preg_match('/^[a-z0-9\-\(\),% #]+$/i', $gradient) ? $gradient : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        // Gradient is from our controlled list, but still validate it contains only CSS-safe characters (no spaces)
+        $safeGradient = preg_match('/^[a-z0-9\-\(\),#%]+$/i', $gradient) ? $gradient : 'linear-gradient(135deg,#667eea0%,#764ba2100%)';
         
         return <<<HTML
 <!DOCTYPE html>
@@ -344,7 +346,7 @@ class LicenseValidator {
             padding: 40px 40px 20px;
             text-align: center;
             color: white;
-            background: {$gradient};
+            background: {$safeGradient};
         }
         .error-icon {
             color: white;
@@ -411,7 +413,7 @@ class LicenseValidator {
             text-align: center;
         }
         .btn-primary {
-            background: {$gradient};
+            background: {$safeGradient};
             color: white;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }

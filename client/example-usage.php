@@ -13,8 +13,8 @@ require_once 'license-client.php';
 // =============================================================================
 
 // Replace these with your actual values
-define('LICENSE_SERVER_URL', 'https://license.example.com');  // Your license server URL (use HTTPS)
-define('YOUR_API_KEY', 'YOUR_API_KEY_HERE');                  // Your API key from dashboard
+define('LICENSE_SERVER_URL', 'https://YOUR-LICENSE-SERVER.com');  // Your license server URL (use HTTPS)
+define('YOUR_API_KEY', 'YOUR_API_KEY_HERE');                      // Your API key from dashboard
 
 // =============================================================================
 // EXAMPLE 1: Basic Usage - Die with Beautiful Error Page (Default)
