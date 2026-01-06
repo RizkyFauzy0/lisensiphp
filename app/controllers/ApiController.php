@@ -117,14 +117,19 @@ class ApiController {
     }
 
     private function getClientIP() {
-        $ipAddress = '';
-        if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-            $ipAddress = $_SERVER['HTTP_CLIENT_IP'];
-        } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $ipAddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        } else {
-            $ipAddress = $_SERVER['REMOTE_ADDR'];
+        // Get IP address with sanitization
+        $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '';
+        
+        // Only trust proxy headers if behind a known proxy (configure as needed)
+        // For security, we primarily use REMOTE_ADDR which cannot be spoofed
+        // Uncomment and configure the following lines if behind a trusted proxy:
+        /*
+        if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            $ipList = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
+            $ipAddress = trim($ipList[0]); // Use first IP in chain
         }
-        return $ipAddress;
+        */
+        
+        return filter_var($ipAddress, FILTER_VALIDATE_IP) ? $ipAddress : '0.0.0.0';
     }
 }

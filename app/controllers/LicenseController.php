@@ -12,8 +12,8 @@ class LicenseController {
     public function index() {
         AuthController::checkAuth();
 
-        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-        $search = isset($_GET['search']) ? $_GET['search'] : '';
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
         $licenses = $this->licenseModel->getAll($page, PER_PAGE, $search);
         $total = $this->licenseModel->count($search);
@@ -26,9 +26,9 @@ class LicenseController {
         AuthController::checkAuth();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $domain = $_POST['domain'] ?? '';
+            $domain = trim($_POST['domain'] ?? '');
             $status = $_POST['status'] ?? 'active';
-            $requestLimit = $_POST['request_limit'] ?? 1000;
+            $requestLimit = (int)($_POST['request_limit'] ?? 1000);
             $expiresAt = $_POST['expires_at'] ?? null;
 
             if (empty($domain)) {
@@ -40,6 +40,13 @@ class LicenseController {
             // Validate domain format
             if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/', $domain)) {
                 $_SESSION['error'] = 'Format domain tidak valid';
+                header('Location: /licenses/create');
+                exit;
+            }
+
+            // Validate request limit
+            if ($requestLimit < 1 || $requestLimit > 1000000) {
+                $_SESSION['error'] = 'Request limit harus antara 1 dan 1,000,000';
                 header('Location: /licenses/create');
                 exit;
             }
@@ -104,9 +111,9 @@ class LicenseController {
         }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $domain = $_POST['domain'] ?? '';
+            $domain = trim($_POST['domain'] ?? '');
             $status = $_POST['status'] ?? 'active';
-            $requestLimit = $_POST['request_limit'] ?? 1000;
+            $requestLimit = (int)($_POST['request_limit'] ?? 1000);
             $expiresAt = $_POST['expires_at'] ?? null;
 
             if (empty($domain)) {
@@ -118,6 +125,13 @@ class LicenseController {
             // Validate domain format
             if (!preg_match('/^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$/', $domain)) {
                 $_SESSION['error'] = 'Format domain tidak valid';
+                header('Location: /licenses/edit?id=' . $id);
+                exit;
+            }
+
+            // Validate request limit
+            if ($requestLimit < 1 || $requestLimit > 1000000) {
+                $_SESSION['error'] = 'Request limit harus antara 1 dan 1,000,000';
                 header('Location: /licenses/edit?id=' . $id);
                 exit;
             }

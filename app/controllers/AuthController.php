@@ -9,7 +9,7 @@ class AuthController {
 
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'] ?? '';
+            $username = trim($_POST['username'] ?? '');
             $password = $_POST['password'] ?? '';
 
             if (empty($username) || empty($password)) {
@@ -21,6 +21,9 @@ class AuthController {
             $user = $this->userModel->findByUsername($username);
 
             if ($user && $this->userModel->verifyPassword($password, $user['password'])) {
+                // Regenerate session ID to prevent session fixation
+                session_regenerate_id(true);
+                
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
@@ -39,8 +42,8 @@ class AuthController {
 
     public function register() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'] ?? '';
-            $email = $_POST['email'] ?? '';
+            $username = trim($_POST['username'] ?? '');
+            $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
             $confirmPassword = $_POST['confirm_password'] ?? '';
 
@@ -59,6 +62,13 @@ class AuthController {
 
             if (strlen($password) < 6) {
                 $_SESSION['error'] = 'Password minimal 6 karakter';
+                header('Location: /register');
+                exit;
+            }
+
+            // Validate email format
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $_SESSION['error'] = 'Format email tidak valid';
                 header('Location: /register');
                 exit;
             }
