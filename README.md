@@ -261,7 +261,76 @@ Hanya super admin yang dapat mengelola user:
 
 ## 🔗 Integrasi di Aplikasi Klien
 
-### PHP Example
+### 🎯 Professional Client Library (Recommended)
+
+Kami menyediakan **client library profesional** dengan tampilan error yang cantik dan mudah diintegrasikan!
+
+**Fitur Client Library:**
+- ✨ Halaman error profesional dengan desain modern
+- 🎨 Gradient background dan styling responsif
+- 🔧 Multiple display modes (die, redirect, silent, json)
+- 📦 Zero dependencies - pure PHP
+- 🚀 Production-ready dengan caching support
+
+#### Quick Start
+
+```php
+<?php
+// 1. Copy file client/license-client.php ke aplikasi Anda
+require_once 'license-client.php';
+
+// 2. Initialize dan validate
+$license = new LicenseValidator(
+    'https://your-license-server.com',  // URL server lisensi
+    'YOUR_API_KEY_HERE'                  // API key dari dashboard
+);
+
+// 3. Validasi (otomatis tampilkan halaman error cantik jika invalid)
+$license->validate();
+
+// Aplikasi berjalan normal di sini jika lisensi valid
+echo "✓ License valid! Application running...";
+?>
+```
+
+#### Display Modes
+
+```php
+// Mode 1: Die with beautiful error page (default)
+$license->validate(); // or $license->validate('die');
+
+// Mode 2: Silent - return boolean
+$isValid = $license->validate('silent');
+
+// Mode 3: JSON - return full response
+$result = $license->validate('json');
+
+// Mode 4: Redirect to purchase page
+$license->validate('redirect', 'https://buy-license.com');
+```
+
+#### Error Page Preview
+
+Client library menampilkan halaman error profesional dengan:
+- 🎨 Beautiful gradient backgrounds
+- 📊 Detail informasi (domain, status, expiry, request limits)
+- 🔘 Action buttons (contact support, retry)
+- 📱 Fully responsive design
+
+**📚 Dokumentasi Lengkap:** Lihat [client/README.md](client/README.md) untuk panduan detail dan contoh penggunaan.
+
+**📁 Files:**
+- `client/license-client.php` - Main client library
+- `client/example-usage.php` - Berbagai contoh penggunaan
+- `client/README.md` - Dokumentasi lengkap
+
+---
+
+### 🔧 Manual Integration (Alternative)
+
+Jika Anda ingin integrasi manual tanpa client library:
+
+#### PHP Example
 
 ```php
 <?php
@@ -294,7 +363,7 @@ echo "Lisensi valid! Sisa request: " . $result['data']['remaining_requests'];
 ?>
 ```
 
-### cURL Example
+#### cURL Example
 
 ```php
 <?php
@@ -321,7 +390,7 @@ if ($result['status'] !== 'valid') {
 ?>
 ```
 
-### JavaScript Example
+#### JavaScript Example
 
 ```javascript
 async function validateLicense(apiKey, domain) {
