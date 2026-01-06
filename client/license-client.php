@@ -292,13 +292,20 @@ class LicenseValidator {
     private function generateErrorHtml($icon, $title, $message, $gradient, $data, $fullResponse) {
         $detailsHtml = $this->generateDetailsHtml($data, $fullResponse);
         
+        // Sanitize all user-facing content
+        $safeTitle = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+        $safeMessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+        $safeSupportEmail = htmlspecialchars($this->supportEmail, ENT_QUOTES, 'UTF-8');
+        // Gradient is from our controlled list, but still validate it contains only CSS-safe characters
+        $safeGradient = preg_match('/^[a-z0-9\-\(\),% #]+$/i', $gradient) ? $gradient : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        
         return <<<HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{$title}</title>
+    <title>{$safeTitle}</title>
     <style>
         * {
             margin: 0;
@@ -307,7 +314,7 @@ class LicenseValidator {
         }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: {$gradient};
+            background: {$safeGradient};
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -469,13 +476,13 @@ class LicenseValidator {
             </div>
         </div>
         <div class="error-body">
-            <h1>{$title}</h1>
-            <p class="error-message">{$message}</p>
+            <h1>{$safeTitle}</h1>
+            <p class="error-message">{$safeMessage}</p>
             
             {$detailsHtml}
             
             <div class="action-buttons">
-                <a href="mailto:{$this->supportEmail}" class="btn btn-primary">Contact Support</a>
+                <a href="mailto:{$safeSupportEmail}" class="btn btn-primary">Contact Support</a>
                 <button onclick="window.location.reload()" class="btn btn-secondary">Retry</button>
             </div>
         </div>
@@ -514,19 +521,26 @@ HTML;
         
         // Add remaining days if available
         if (isset($data['remaining_days']) && $data['remaining_days'] !== null) {
-            $details['Remaining Days'] = $data['remaining_days'] . ' days';
+            // Ensure it's numeric before using
+            $days = is_numeric($data['remaining_days']) ? intval($data['remaining_days']) : 0;
+            $details['Remaining Days'] = $days . ' days';
         }
         
         // Add request info if blocked
         if (isset($fullResponse['request_count']) && isset($fullResponse['request_limit'])) {
-            $details['Request Count'] = number_format($fullResponse['request_count']) . ' / ' . number_format($fullResponse['request_limit']);
+            $reqCount = is_numeric($fullResponse['request_count']) ? intval($fullResponse['request_count']) : 0;
+            $reqLimit = is_numeric($fullResponse['request_limit']) ? intval($fullResponse['request_limit']) : 0;
+            $details['Request Count'] = number_format($reqCount) . ' / ' . number_format($reqLimit);
         } elseif (isset($data['request_count']) && isset($data['request_limit'])) {
-            $details['Request Usage'] = number_format($data['request_count']) . ' / ' . number_format($data['request_limit']);
+            $reqCount = is_numeric($data['request_count']) ? intval($data['request_count']) : 0;
+            $reqLimit = is_numeric($data['request_limit']) ? intval($data['request_limit']) : 0;
+            $details['Request Usage'] = number_format($reqCount) . ' / ' . number_format($reqLimit);
         }
         
         // Add remaining requests if available
         if (isset($data['remaining_requests'])) {
-            $details['Remaining Requests'] = number_format($data['remaining_requests']);
+            $remaining = is_numeric($data['remaining_requests']) ? intval($data['remaining_requests']) : 0;
+            $details['Remaining Requests'] = number_format($remaining);
         }
         
         // Add error details if available

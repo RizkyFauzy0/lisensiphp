@@ -186,34 +186,46 @@
         const closeSidebarBtn = document.getElementById('close-sidebar-btn');
 
         function openSidebar() {
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Prevent body scroll
+            if (sidebar && overlay) {
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // Prevent body scroll
+            }
         }
 
         function closeSidebar() {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-            document.body.style.overflow = ''; // Restore body scroll
+            if (sidebar && overlay) {
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = ''; // Restore body scroll
+            }
         }
 
         // Open menu on hamburger button click
-        mobileMenuBtn.addEventListener('click', openSidebar);
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', openSidebar);
+        }
 
         // Close menu on close button click
-        closeSidebarBtn.addEventListener('click', closeSidebar);
+        if (closeSidebarBtn) {
+            closeSidebarBtn.addEventListener('click', closeSidebar);
+        }
 
         // Close menu on overlay click
-        overlay.addEventListener('click', closeSidebar);
+        if (overlay) {
+            overlay.addEventListener('click', closeSidebar);
+        }
 
         // Close menu on menu item click (mobile only)
-        document.querySelectorAll('#sidebar a').forEach(link => {
-            link.addEventListener('click', () => {
-                if (window.innerWidth < 1024) {
-                    closeSidebar();
-                }
+        if (sidebar) {
+            document.querySelectorAll('#sidebar a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 1024) {
+                        closeSidebar();
+                    }
+                });
             });
-        });
+        }
 
         // Close sidebar on window resize to desktop
         window.addEventListener('resize', () => {
