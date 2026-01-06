@@ -237,7 +237,7 @@ class License {
      * @return string Actual status (active, expired, suspended)
      */
     public function getActualStatus() {
-        if ($this->expires_at && strtotime($this->expires_at) < strtotime('today')) {
+        if ($this->expires_at && strtotime($this->expires_at) < time()) {
             return 'expired';
         }
         return $this->status;
@@ -249,6 +249,6 @@ class License {
      * @return bool True if expired, false otherwise
      */
     public function isExpired() {
-        return $this->expires_at && strtotime($this->expires_at) < strtotime('today');
+        return $this->expires_at && strtotime($this->expires_at) < time();
     }
 }

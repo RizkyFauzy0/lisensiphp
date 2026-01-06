@@ -137,9 +137,9 @@ class LicenseController {
             }
 
             // Auto-update status based on expiration date
-            if ($expiresAt && strtotime($expiresAt) < strtotime('today')) {
+            if ($expiresAt && strtotime($expiresAt) < time()) {
                 $status = 'expired';
-            } elseif ($status === 'expired' && (!$expiresAt || strtotime($expiresAt) >= strtotime('today'))) {
+            } elseif ($status === 'expired' && (!$expiresAt || strtotime($expiresAt) >= time())) {
                 // If status was expired but expiration date is in future or null, set to active
                 $status = 'active';
             }
