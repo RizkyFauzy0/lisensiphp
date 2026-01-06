@@ -103,6 +103,24 @@ Redirects to URL if invalid:
 $license->validate('redirect', 'https://your-site.com/buy-license');
 ```
 
+### Customization Options
+
+#### Set Custom Support Email
+
+By default, error pages show 'support@example.com'. You can customize this:
+
+```php
+$license = new LicenseValidator(
+    'https://your-license-server.com',
+    'YOUR_API_KEY_HERE'
+);
+
+// Set custom support email
+$license->setSupportEmail('help@your-company.com');
+
+$license->validate();
+```
+
 ### Advanced Usage
 
 #### Caching Validation Results
@@ -477,9 +495,9 @@ $license->validate('die'); // Will show error page
 
 For issues or questions:
 
-- **Documentation**: See main README.md
+- **Documentation**: See main README.md and this client documentation
 - **GitHub Issues**: Open an issue in the repository
-- **Email**: support@example.com
+- **Email**: Contact your license provider's support team
 
 ## 📄 License
 

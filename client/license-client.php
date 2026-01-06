@@ -14,6 +14,7 @@ class LicenseValidator {
     private $apiKey;
     private $domain;
     private $timeout = 10;
+    private $supportEmail = 'support@example.com';
     
     /**
      * Initialize the License Validator
@@ -26,6 +27,17 @@ class LicenseValidator {
         $this->apiUrl = rtrim($apiUrl, '/');
         $this->apiKey = $apiKey;
         $this->domain = $domain ?: ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? 'unknown');
+    }
+    
+    /**
+     * Set custom support email for error pages
+     * 
+     * @param string $email Support email address
+     * @return self
+     */
+    public function setSupportEmail($email) {
+        $this->supportEmail = $email;
+        return $this;
     }
     
     /**
@@ -463,7 +475,7 @@ class LicenseValidator {
             {$detailsHtml}
             
             <div class="action-buttons">
-                <a href="mailto:support@example.com" class="btn btn-primary">Contact Support</a>
+                <a href="mailto:{$this->supportEmail}" class="btn btn-primary">Contact Support</a>
                 <button onclick="window.location.reload()" class="btn btn-secondary">Retry</button>
             </div>
         </div>
