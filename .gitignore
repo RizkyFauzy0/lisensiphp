@@ -1,0 +1,25 @@
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+error_log
+
+# Temporary files
+/tmp/
+*.tmp
+
+# Environment
+.env
+.env.local
+
+# Config (optional - uncomment if you don't want to commit config)
+# config/database.php
