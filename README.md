@@ -263,65 +263,125 @@ Hanya super admin yang dapat mengelola user:
 
 ### 🎯 Professional Client Library (Recommended)
 
-Kami menyediakan **client library profesional** dengan tampilan error yang cantik dan mudah diintegrasikan!
+Kami menyediakan **2 client library profesional** dengan tampilan error yang cantik dan mudah diintegrasikan!
 
-**Fitur Client Library:**
-- ✨ Halaman error profesional dengan desain modern
-- 🎨 Gradient background dan styling responsif
-- 🔧 Multiple display modes (die, redirect, silent, json)
+#### 🆕 license-check.php (NEW - Recommended)
+
+Library terbaru dengan Tailwind CSS dan fitur lengkap:
+
+**Fitur Unggulan:**
+- ✨ Halaman error profesional dengan Tailwind CSS
+- 🎨 6 error states dengan gradient background unik
+- 💾 Session-based caching otomatis
+- ⚙️ Configurable options (cache duration, support/purchase URLs)
+- 🔧 3 validation modes: `validate()`, `check()`, `isValid()`
 - 📦 Zero dependencies - pure PHP
-- 🚀 Production-ready dengan caching support
+- 🚀 Production-ready
 
-#### Quick Start
+**Quick Start - Hanya 2 Baris!**
 
 ```php
 <?php
-// 1. Copy file client/license-client.php ke aplikasi Anda
-require_once 'license-client.php';
+// 1. Copy file client/license-check.php ke aplikasi Anda
+require_once 'license-check.php';
 
-// 2. Initialize dan validate
-$license = new LicenseValidator(
-    'https://your-license-server.com',  // URL server lisensi
-    'YOUR_API_KEY_HERE'                  // API key dari dashboard
-);
-
-// 3. Validasi (otomatis tampilkan halaman error cantik jika invalid)
-$license->validate();
+// 2. Validasi - hanya butuh 2 baris!
+checkLicense('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
 
 // Aplikasi berjalan normal di sini jika lisensi valid
 echo "✓ License valid! Application running...";
 ?>
 ```
 
-#### Display Modes
+**Usage Modes:**
 
 ```php
-// Mode 1: Die with beautiful error page (default)
-$license->validate(); // or $license->validate('die');
+// Mode 1: Simple helper function
+checkLicense('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
 
-// Mode 2: Silent - return boolean
-$isValid = $license->validate('silent');
+// Mode 2: OOP with validate() - dies with error page
+$license = new LicenseChecker('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
+$license->validate();
 
-// Mode 3: JSON - return full response
-$result = $license->validate('json');
+// Mode 3: check() - returns full response
+$result = $license->check();
+if ($result['status'] === 'valid') {
+    // Custom handling
+}
 
-// Mode 4: Redirect to purchase page
-$license->validate('redirect', 'https://buy-license.com');
+// Mode 4: isValid() - simple boolean
+if (!$license->isValid()) {
+    header('Location: /buy-license');
+    exit;
+}
 ```
 
-#### Error Page Preview
+**Configuration Options:**
 
-Client library menampilkan halaman error profesional dengan:
-- 🎨 Beautiful gradient backgrounds
-- 📊 Detail informasi (domain, status, expiry, request limits)
-- 🔘 Action buttons (contact support, retry)
-- 📱 Fully responsive design
+```php
+$license = new LicenseChecker(
+    'https://lisensi.gdvmedia.com',
+    'YOUR_API_KEY',
+    [
+        'cache_duration' => 1800,                        // 30 menit
+        'support_url' => 'https://gdvmedia.com/contact',
+        'purchase_url' => 'https://gdvmedia.com/pricing'
+    ]
+);
+```
+
+#### 📦 license-client.php (Legacy)
+
+Library original dengan inline CSS (masih didukung):
+
+**Fitur:**
+- ✨ Halaman error profesional dengan inline CSS
+- 🔧 Multiple display modes (die, redirect, silent, json)
+- 📦 Zero dependencies - pure PHP
+- 🚀 Production-ready
+
+```php
+<?php
+require_once 'license-client.php';
+
+$license = new LicenseValidator(
+    'https://your-license-server.com',
+    'YOUR_API_KEY_HERE'
+);
+
+$license->validate();
+?>
+```
+
+### 🎨 Error States (license-check.php)
+
+6 error states dengan styling unik:
+
+| Error Type | Title | Gradient | HTTP Code |
+|------------|-------|----------|-----------|
+| **License Not Found** | Lisensi Tidak Ditemukan | Red to Rose | 403 |
+| **Domain Mismatch** | Domain Tidak Sesuai | Orange to Amber | 403 |
+| **License Expired** | Lisensi Kadaluarsa | Yellow to Orange | 403 |
+| **License Suspended** | Lisensi Di-Suspend | Red to Dark Red | 403 |
+| **Limit Exceeded** | Batas Request Tercapai | Blue to Indigo | 429 |
+| **Connection Error** | Kesalahan Koneksi | Gray to Dark Gray | 503 |
+
+Setiap error menampilkan:
+- Beautiful Tailwind CSS gradient background
+- SVG icon dengan color coding
+- Error title dan message yang jelas
+- Details card (domain, status, expiry, request limits)
+- Action buttons (Contact Support, Buy License)
+- Fully responsive design
 
 **📚 Dokumentasi Lengkap:** Lihat [client/README.md](client/README.md) untuk panduan detail dan contoh penggunaan.
 
-**📁 Files:**
-- `client/license-client.php` - Main client library
-- `client/example-usage.php` - Berbagai contoh penggunaan
+**📁 Client Files:**
+- `client/license-check.php` - ⭐ Library baru (recommended)
+- `client/example-basic.php` - Contoh sederhana (2 baris)
+- `client/example-advanced.php` - Contoh advanced dengan options
+- `client/license-client.php` - Library legacy (backward compatible)
+- `client/example-usage.php` - Contoh untuk library legacy
 - `client/README.md` - Dokumentasi lengkap
 
 ---
