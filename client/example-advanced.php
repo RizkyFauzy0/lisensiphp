@@ -287,7 +287,7 @@ if ($result['status'] === 'valid' && isset($result['data'])) {
     $requestCount = intval($data['request_count'] ?? 0);
     $requestLimit = intval($data['request_limit'] ?? 1000);
     $remaining = intval($data['remaining_requests'] ?? 0);
-    $percentage = $requestLimit > 0 ? ($requestCount / $requestLimit) * 100 : 0;
+    $percentage = $requestLimit > 0 ? round(($requestCount / $requestLimit) * 100, 1) : 0;
     
     echo "<div class='info-row'>
             <span class='info-label'>Request Digunakan</span>

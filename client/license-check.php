@@ -5,6 +5,9 @@
  * Modern OOP-based license validation with beautiful Tailwind CSS error pages.
  * Includes session caching, multiple error states, and easy integration.
  * 
+ * Note: This library uses Tailwind CSS via CDN, which supports dynamic class generation.
+ * The dynamic classes (e.g., bg-{color}-500) work correctly with the CDN version.
+ * 
  * @version 2.0.0
  * @author License Management System
  * @license MIT
@@ -478,6 +481,7 @@ HTML;
         foreach ($details as $label => $value) {
             $html .= '<div class="flex justify-between">';
             $html .= '<span class="text-gray-500">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</span>';
+            // Note: $value may contain safe HTML (e.g., status span) that was already sanitized when added to $details
             $html .= '<span class="font-mono text-gray-700">' . $value . '</span>';
             $html .= '</div>';
         }
