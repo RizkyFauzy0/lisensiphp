@@ -68,7 +68,7 @@ class LicenseCheck {
         }
     }
 }</code></pre>
-                            <button onclick="copyCode(this, 'ci3-step1')" class="absolute top-2 right-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -85,7 +85,7 @@ class LicenseCheck {
     'filename' => 'LicenseCheck.php',
     'filepath' => 'hooks'
 );</code></pre>
-                            <button onclick="copyCode(this, 'ci3-step2')" class="absolute top-2 right-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -97,7 +97,7 @@ class LicenseCheck {
                         <p class="text-sm text-gray-600 mb-3">File: <code class="bg-gray-100 px-2 py-1 rounded">application/config/config.php</code></p>
                         <div class="relative">
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>$config['enable_hooks'] = TRUE;</code></pre>
-                            <button onclick="copyCode(this, 'ci3-step3')" class="absolute top-2 right-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -154,7 +154,7 @@ class LicenseFilter implements FilterInterface {
         // Do nothing
     }
 }</code></pre>
-                            <button onclick="copyCode(this, 'ci4-step1')" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -174,7 +174,7 @@ class LicenseFilter implements FilterInterface {
 public $aliases = [
     'licensecheck' => \App\Filters\LicenseFilter::class,
 ];</code></pre>
-                            <button onclick="copyCode(this, 'ci4-step2')" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -206,7 +206,7 @@ public $aliases = [
                         <p class="text-sm text-gray-600 mb-3">Terminal:</p>
                         <div class="relative mb-4">
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>php artisan make:middleware LicenseCheck</code></pre>
-                            <button onclick="copyCode(this, 'laravel-cmd')" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -235,7 +235,7 @@ class LicenseCheck {
         return $next($request);
     }
 }</code></pre>
-                            <button onclick="copyCode(this, 'laravel-step1')" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -255,7 +255,7 @@ protected $middleware = [
 ->withMiddleware(function (Middleware $middleware) {
     $middleware->append(\App\Http\Middleware\LicenseCheck::class);
 })</code></pre>
-                            <button onclick="copyCode(this, 'laravel-step2')" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -267,7 +267,7 @@ protected $middleware = [
                         <p class="text-sm text-gray-600 mb-3">File: <code class="bg-gray-100 px-2 py-1 rounded">.env</code></p>
                         <div class="relative">
                             <pre class="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm"><code>LICENSE_API_KEY=<?= $apiKey ?></code></pre>
-                            <button onclick="copyCode(this, 'laravel-step3')" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -318,7 +318,7 @@ function checkLicense($api_key) {
     
     return true;
 }</code></pre>
-                            <button onclick="copyCode(this, 'native-step1')" class="absolute top-2 right-2 px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -334,7 +334,7 @@ checkLicense('<?= $apiKey ?>');
 
 // Lanjut kode aplikasi Anda...
 ?&gt;</code></pre>
-                            <button onclick="copyCode(this, 'native-step2')" class="absolute top-2 right-2 px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-purple-600 text-white text-sm rounded hover:bg-purple-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -381,7 +381,7 @@ function checkLicense($api_key) {
 }
 
 checkLicense('<?= $apiKey ?>');</code></pre>
-                            <button onclick="copyCode(this, 'native-bonus')" class="absolute top-2 right-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
+                            <button onclick="copyCode(this)" class="absolute top-2 right-2 px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors">
                                 <i class="fas fa-copy mr-1"></i>Copy Code
                             </button>
                         </div>
@@ -440,7 +440,7 @@ checkLicense('<?= $apiKey ?>');</code></pre>
 </div>
 
 <script>
-function copyCode(button, id) {
+function copyCode(button) {
     const pre = button.previousElementSibling;
     const code = pre.querySelector('code');
     const text = code.textContent;
