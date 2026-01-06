@@ -5,23 +5,54 @@ Professional PHP client library for integrating license validation into your app
 ## 📦 Features
 
 - **OOP Design** - Clean, modern PHP class-based implementation
-- **Beautiful Error Pages** - Professional styled error pages with inline CSS
-- **Multiple Display Modes** - Choose how to handle invalid licenses
+- **Beautiful Error Pages** - Professional styled error pages with Tailwind CSS
+- **Session-Based Caching** - Automatic caching to reduce API calls
+- **Multiple Validation Modes** - Choose how to handle invalid licenses
+- **6 Error States** - Comprehensive error handling with specific styling
 - **Auto Domain Detection** - Automatically detects the current domain
-- **Comprehensive Error Handling** - Handles all error states gracefully
+- **Configurable Options** - Custom cache duration, support URL, purchase URL
 - **Zero Dependencies** - Works with pure PHP (no external libraries needed)
 - **Fully Responsive** - Error pages look great on all devices
-- **Production Ready** - Includes caching examples and best practices
+- **Production Ready** - Built-in caching and best practices
 
-## 🚀 Quick Start
+## 📁 Available Files
+
+### Main Libraries
+
+1. **`license-check.php`** (NEW - Recommended ⭐)
+   - Latest version with Tailwind CSS error pages
+   - Session-based caching system
+   - 6 distinct error states with unique styling
+   - Configurable options (cache duration, URLs)
+   - Methods: `validate()`, `check()`, `isValid()`
+   - Helper function: `checkLicense()`
+
+2. **`license-client.php`** (Legacy)
+   - Original version with inline CSS
+   - Multiple display modes (die, silent, json, redirect)
+   - Still maintained for backward compatibility
+
+### Example Files
+
+3. **`example-basic.php`** - Simple 2-line integration example
+4. **`example-advanced.php`** - Advanced usage with custom options
+5. **`example-usage.php`** - Legacy examples (for license-client.php)
+
+### Documentation
+
+6. **`README.md`** - This file - Complete integration guide
+
+---
+
+## 🚀 Quick Start (New - Recommended)
 
 ### 1. Download the Client File
 
-Copy the `license-client.php` file to your application directory:
+Copy the `license-check.php` file to your application directory:
 
 ```bash
 # Copy to your project root or includes directory
-cp client/license-client.php /path/to/your/project/
+cp client/license-check.php /path/to/your/project/
 ```
 
 ### 2. Get Your API Key
@@ -31,174 +62,177 @@ cp client/license-client.php /path/to/your/project/
 3. Create a new license or view existing one
 4. Copy the **API Key**
 
-### 3. Basic Integration
+### 3. Basic Integration (Just 2 Lines!)
 
 Add this to your application's main file (e.g., `index.php`, `config.php`, or bootstrap file):
 
 ```php
 <?php
-require_once 'license-client.php';
+require_once 'license-check.php';
 
-$license = new LicenseValidator(
-    'https://your-license-server.com',  // Your license server URL
-    'YOUR_API_KEY_HERE'                  // Your API key
-);
-
-// Validate license - shows error page if invalid
-$license->validate();
+// Just 2 lines for complete protection!
+checkLicense('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
 
 // Your application continues here if valid
 echo "Application running!";
 ?>
 ```
 
-That's it! Your application is now protected.
+That's it! Your application is now protected with beautiful error pages.
 
-## 📖 Usage Guide
+### 4. See It In Action
 
-### Display Modes
+- Run `example-basic.php` for simple usage demo
+- Run `example-advanced.php` for advanced features demo
 
-The `validate()` method accepts different modes:
+---
 
-#### 1. Die Mode (Default)
-Shows beautiful error page and stops execution:
+## 📖 Usage Guide (license-check.php)
+
+### LicenseChecker Class
+
+The new `LicenseChecker` class provides three main methods:
+
+#### 1. validate() - Auto Die with Error Page
+
+The simplest method. Shows beautiful error page and stops execution if invalid:
 
 ```php
-$license->validate(); // or explicitly: $license->validate('die');
+$license = new LicenseChecker('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
+$license->validate(); // Dies with error page if invalid
+
+// Code continues here only if valid
 ```
 
-#### 2. Silent Mode
-Returns boolean, no output:
+#### 2. check() - Get Full Response
+
+Returns complete response array without dying:
 
 ```php
-$isValid = $license->validate('silent');
-
-if ($isValid) {
-    // Continue with application
-} else {
-    // Handle invalid license
-    echo "License invalid!";
-}
-```
-
-#### 3. JSON Mode
-Returns full response array:
-
-```php
-$result = $license->validate('json');
+$license = new LicenseChecker('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
+$result = $license->check();
 
 if ($result['status'] === 'valid') {
     echo "License valid!";
     echo "Expires: " . $result['data']['expires_at'];
     echo "Remaining requests: " . $result['data']['remaining_requests'];
 } else {
-    echo "Error: " . $result['message'];
+    // Custom error handling
+    error_log('License error: ' . $result['message']);
 }
 ```
 
-#### 4. Redirect Mode
-Redirects to URL if invalid:
+#### 3. isValid() - Simple Boolean
+
+Returns true/false for simple conditional logic:
 
 ```php
-$license->validate('redirect', 'https://your-site.com/buy-license');
+$license = new LicenseChecker('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
+
+if (!$license->isValid()) {
+    header('Location: /buy-license');
+    exit;
+}
 ```
 
-### Customization Options
+### Configuration Options
 
-#### Set Custom Support Email
-
-By default, error pages show 'support@example.com'. You can customize this:
+Pass custom options as third parameter:
 
 ```php
-$license = new LicenseValidator(
-    'https://your-license-server.com',
-    'YOUR_API_KEY_HERE'
+$license = new LicenseChecker(
+    'https://lisensi.gdvmedia.com',
+    'YOUR_API_KEY',
+    [
+        'cache_duration' => 1800,                        // 30 minutes (default: 3600)
+        'support_url' => 'https://gdvmedia.com/contact', // Support button URL
+        'purchase_url' => 'https://gdvmedia.com/pricing', // Purchase button URL
+        'domain' => 'custom-domain.com'                  // Override auto-detected domain
+    ]
+);
+```
+
+### Helper Function
+
+For quick implementation, use the `checkLicense()` helper:
+
+```php
+// Simplest possible usage
+checkLicense('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
+
+// With options
+checkLicense('https://lisensi.gdvmedia.com', 'YOUR_API_KEY', [
+    'cache_duration' => 1800,
+    'support_url' => 'https://gdvmedia.com/contact'
+]);
+```
+
+---
+
+## 🎨 Error States
+
+The new library handles 6 distinct error states with unique styling:
+
+| Error Type | Title | Gradient Colors | Icon | HTTP Code |
+|------------|-------|----------------|------|-----------|
+| **License Not Found** | Lisensi Tidak Ditemukan | Red to Rose | Exclamation | 403 |
+| **Domain Mismatch** | Domain Tidak Sesuai | Orange to Amber | Globe | 403 |
+| **License Expired** | Lisensi Kadaluarsa | Yellow to Orange | Clock | 403 |
+| **License Suspended** | Lisensi Di-Suspend | Red to Dark Red | Pause | 403 |
+| **Limit Exceeded** | Batas Request Tercapai | Blue to Indigo | Ban | 429 |
+| **Connection Error** | Kesalahan Koneksi | Gray to Dark Gray | Alert | 503 |
+
+Each error state displays:
+- Beautiful Tailwind CSS gradient background
+- Matching icon with color coding
+- Clear error title and message
+- Details card with domain, status, expiry, request limits
+- Action buttons (Contact Support, Buy License)
+- Fully responsive design
+
+---
+
+## 💾 Session Caching
+
+Built-in session caching reduces API calls:
+
+```php
+// Default: Cache for 1 hour (3600 seconds)
+$license = new LicenseChecker('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
+
+// Custom: Cache for 30 minutes
+$license = new LicenseChecker(
+    'https://lisensi.gdvmedia.com',
+    'YOUR_API_KEY',
+    ['cache_duration' => 1800]
 );
 
-// Set custom support email
-$license->setSupportEmail('help@your-company.com');
-
-$license->validate();
+// Cache is stored in PHP session
+// Automatically cleared after cache_duration expires
+// Valid licenses are cached, invalid ones are not
 ```
 
-### Advanced Usage
+---
 
-#### Caching Validation Results
+## 📋 Advanced Usage Examples
 
-To reduce API calls, implement caching:
-
-```php
-function validateLicenseWithCache() {
-    $cacheFile = sys_get_temp_dir() . '/license_cache_' . md5('YOUR_API_KEY');
-    $cacheDuration = 3600; // 1 hour
-    
-    // Check cache
-    if (file_exists($cacheFile)) {
-        $cacheData = json_decode(file_get_contents($cacheFile), true);
-        if ($cacheData && (time() - $cacheData['timestamp']) < $cacheDuration) {
-            return $cacheData['result'];
-        }
-    }
-    
-    // Validate license
-    $license = new LicenseValidator(
-        'https://your-license-server.com',
-        'YOUR_API_KEY_HERE'
-    );
-    $result = $license->validate('json');
-    
-    // Cache if valid
-    if ($result['status'] === 'valid') {
-        file_put_contents($cacheFile, json_encode([
-            'timestamp' => time(),
-            'result' => $result
-        ]));
-    }
-    
-    return $result;
-}
-
-// Usage
-$result = validateLicenseWithCache();
-if ($result['status'] !== 'valid') {
-    die('License invalid');
-}
-```
-
-#### Validate Only on Specific Routes
+### Validate Only on Specific Routes
 
 ```php
 $requestUri = $_SERVER['REQUEST_URI'];
 
 // Only validate on admin pages
 if (strpos($requestUri, '/admin') === 0) {
-    $license = new LicenseValidator(
-        'https://your-license-server.com',
-        'YOUR_API_KEY_HERE'
-    );
+    $license = new LicenseChecker('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
     $license->validate();
 }
 ```
 
-#### Custom Domain Override
+### Show Expiry Warning
 
 ```php
-// Override auto-detected domain
-$license = new LicenseValidator(
-    'https://your-license-server.com',
-    'YOUR_API_KEY_HERE',
-    'custom-domain.com'  // Custom domain
-);
-```
-
-#### Show Expiry Warning
-
-```php
-$license = new LicenseValidator(
-    'https://your-license-server.com',
-    'YOUR_API_KEY_HERE'
-);
-$result = $license->validate('json');
+$license = new LicenseChecker('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
+$result = $license->check();
 
 if ($result['status'] === 'valid') {
     $remainingDays = $result['data']['remaining_days'] ?? null;
@@ -211,26 +245,66 @@ if ($result['status'] === 'valid') {
 }
 ```
 
-## 🎨 Error Page Customization
+### Custom Error Handling by Type
 
-The error pages include:
+```php
+$license = new LicenseChecker('https://lisensi.gdvmedia.com', 'YOUR_API_KEY');
+$result = $license->check();
 
-- **Gradient Background** - Beautiful gradient colors based on error type
-- **SVG Icons** - Professional inline SVG icons
-- **Details Card** - Shows domain, status, expiry, request limits, etc.
-- **Action Buttons** - Contact support and retry buttons
-- **Fully Responsive** - Works on mobile, tablet, and desktop
+if ($result['status'] !== 'valid') {
+    switch ($result['error_type'] ?? 'unknown') {
+        case 'license_expired':
+            header('Location: /renew-license');
+            exit;
+            
+        case 'domain_mismatch':
+            mail('admin@example.com', 'Domain Mismatch', $result['message']);
+            break;
+            
+        case 'limit_exceeded':
+            echo "Request limit exceeded. Please upgrade your plan.";
+            exit;
+    }
+}
+```
 
-### Error Types & Colors
+---
 
-| Error Type | Color Scheme | Icon |
-|------------|--------------|------|
-| Invalid License | Purple Gradient | Exclamation |
-| Expired License | Red Gradient | Clock |
-| Domain Mismatch | Pink Gradient | Globe |
-| Suspended License | Blue Gradient | Pause |
-| Limit Exceeded | Pink-Red Gradient | Ban |
-| Server Error | Orange Gradient | Alert |
+## 📖 Legacy Library (license-client.php)
+
+### LicenseValidator Class
+
+The legacy `LicenseValidator` class supports multiple display modes:
+
+#### Display Modes
+
+```php
+$license = new LicenseValidator('https://your-server.com', 'YOUR_API_KEY');
+
+// 1. Die Mode (default) - shows error page and stops
+$license->validate(); // or $license->validate('die')
+
+// 2. Silent Mode - returns boolean
+$isValid = $license->validate('silent');
+
+// 3. JSON Mode - returns full response array
+$result = $license->validate('json');
+
+// 4. Redirect Mode - redirects if invalid
+$license->validate('redirect', 'https://your-site.com/buy-license');
+```
+
+#### Set Custom Support Email
+
+```php
+$license = new LicenseValidator('https://your-server.com', 'YOUR_API_KEY');
+$license->setSupportEmail('help@your-company.com');
+$license->validate();
+```
+
+See `example-usage.php` for more legacy examples.
+
+---
 
 ## 🔧 API Response Format
 
@@ -276,10 +350,13 @@ The error pages include:
 ```json
 {
     "status": "error",
+    "error_type": "connection_error",
     "message": "Cannot connect to license server",
     "details": "Connection timeout"
 }
 ```
+
+---
 
 ## 🛡️ Security Best Practices
 
@@ -305,10 +382,10 @@ Always use HTTPS for your license server:
 
 ```php
 // ✗ BAD
-$license = new LicenseValidator('http://license-server.com', $apiKey);
+$license = new LicenseChecker('http://license-server.com', $apiKey);
 
 // ✓ GOOD
-$license = new LicenseValidator('https://license-server.com', $apiKey);
+$license = new LicenseChecker('https://license-server.com', $apiKey);
 ```
 
 ### 3. Implement Caching
@@ -316,8 +393,12 @@ $license = new LicenseValidator('https://license-server.com', $apiKey);
 Reduce API calls with caching to prevent rate limiting:
 
 ```php
-// Cache validation for 1 hour
-$result = validateLicenseWithCache(); // See caching example above
+// Built-in session caching (recommended)
+$license = new LicenseChecker(
+    'https://lisensi.gdvmedia.com',
+    'YOUR_API_KEY',
+    ['cache_duration' => 3600] // 1 hour
+);
 ```
 
 ### 4. Log Validation Failures
@@ -325,12 +406,14 @@ $result = validateLicenseWithCache(); // See caching example above
 Log failures for security monitoring:
 
 ```php
-$result = $license->validate('json');
+$result = $license->check();
 
 if ($result['status'] !== 'valid') {
     error_log('License validation failed: ' . $result['message']);
 }
 ```
+
+---
 
 ## 📝 Integration Examples
 
@@ -342,17 +425,15 @@ if ($result['status'] !== 'valid') {
 Plugin Name: My Premium Plugin
 */
 
-require_once plugin_dir_path(__FILE__) . 'license-client.php';
+require_once plugin_dir_path(__FILE__) . 'license-check.php';
 
 add_action('init', function() {
-    $license = new LicenseValidator(
+    $license = new LicenseChecker(
         'https://your-license-server.com',
         get_option('my_plugin_license_key')
     );
     
-    $result = $license->validate('silent');
-    
-    if (!$result) {
+    if (!$license->isValid()) {
         add_action('admin_notices', function() {
             echo '<div class="error"><p>License invalid! Please activate your license.</p></div>';
         });
@@ -374,17 +455,15 @@ class ValidateLicense
 {
     public function handle($request, Closure $next)
     {
-        require_once base_path('license-client.php');
+        require_once base_path('license-check.php');
         
-        $license = new \LicenseValidator(
+        $license = new \LicenseChecker(
             config('license.server_url'),
             config('license.api_key')
         );
         
-        $result = $license->validate('json');
-        
-        if ($result['status'] !== 'valid') {
-            return response()->view('errors.license', ['error' => $result], 403);
+        if (!$license->isValid()) {
+            return response()->view('errors.license', [], 403);
         }
         
         return $next($request);
@@ -402,17 +481,17 @@ class LicenseCheck
 {
     public function check()
     {
-        require_once APPPATH . 'third_party/license-client.php';
+        require_once APPPATH . 'third_party/license-check.php';
         
         $CI =& get_instance();
         $CI->load->config('license');
         
-        $license = new LicenseValidator(
+        $license = new LicenseChecker(
             $CI->config->item('license_server_url'),
             $CI->config->item('license_api_key')
         );
         
-        $license->validate('die');
+        $license->validate();
     }
 }
 
@@ -425,37 +504,7 @@ $hook['pre_controller'] = array(
 );
 ```
 
-## 🧪 Testing
-
-### Test with Different Domains
-
-```php
-// Test different domains
-$domains = ['example.com', 'test.com', 'invalid.com'];
-
-foreach ($domains as $domain) {
-    $license = new LicenseValidator(
-        'https://your-license-server.com',
-        'YOUR_API_KEY',
-        $domain
-    );
-    
-    $result = $license->validate('json');
-    echo "Domain: $domain - Status: " . $result['status'] . "\n";
-}
-```
-
-### Test Error Pages
-
-```php
-// Force error page display
-$license = new LicenseValidator(
-    'https://your-license-server.com',
-    'INVALID_KEY_FOR_TESTING'
-);
-
-$license->validate('die'); // Will show error page
-```
+---
 
 ## ❓ Troubleshooting
 
@@ -478,7 +527,7 @@ $license->validate('die'); // Will show error page
 ### Issue: "Request limit exceeded"
 
 **Solutions:**
-- Implement caching to reduce API calls
+- Implement caching to reduce API calls (built-in with license-check.php)
 - Contact support to increase your limit
 - Reset request count in dashboard
 - Check for loops calling validation repeatedly
@@ -491,13 +540,18 @@ $license->validate('die'); // Will show error page
 - Verify PHP errors are not being displayed
 - Check browser console for JavaScript errors
 
+---
+
 ## 📞 Support
 
 For issues or questions:
 
 - **Documentation**: See main README.md and this client documentation
+- **Example Files**: Check example-basic.php and example-advanced.php
 - **GitHub Issues**: Open an issue in the repository
 - **Email**: Contact your license provider's support team
+
+---
 
 ## 📄 License
 
