@@ -165,4 +165,69 @@ class License {
         $sql = "UPDATE licenses SET status = 'expired' WHERE expires_at <= CURDATE() AND status = 'active'";
         return $this->db->query($sql);
     }
+
+    /**
+     * Validate domain format (including subdomain and wildcard)
+     * Accepts: domain.com, sub.domain.com, *.domain.com
+     */
+    public static function isValidDomain($domain) {
+        if (empty($domain)) {
+            return false;
+        }
+
+        // Allow wildcard prefix
+        if (strpos($domain, '*.') === 0) {
+            $domain = substr($domain, 2); // Remove *. prefix for validation
+        }
+
+        // Regex for domain and subdomain validation
+        // Pattern explanation:
+        // - Each label: starts/ends with alphanumeric, may have hyphens in middle
+        // - Multiple labels separated by dots
+        // - Must have at least 2 labels (domain + TLD)
+        // - TLD: at least 2 characters
+        $pattern = '/^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?$/';
+        
+        // Additional check: TLD must be at least 2 characters
+        if (preg_match($pattern, $domain) === 1) {
+            $parts = explode('.', $domain);
+            $tld = end($parts);
+            return strlen($tld) >= 2;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Check if request domain matches license domain (with wildcard support)
+     * 
+     * @param string $licenseDomain Domain from license (may contain wildcard)
+     * @param string $requestDomain Domain from request
+     * @return bool True if domains match
+     */
+    public static function isDomainMatch($licenseDomain, $requestDomain) {
+        // Exact match
+        if ($licenseDomain === $requestDomain) {
+            return true;
+        }
+
+        // Wildcard match (*.example.com)
+        if (strpos($licenseDomain, '*.') === 0) {
+            $baseDomain = substr($licenseDomain, 2); // Remove *.
+
+            // Match exact base domain
+            if ($requestDomain === $baseDomain) {
+                return true;
+            }
+
+            // Match any subdomain - ensure proper subdomain boundary
+            // The request domain must end with ".<baseDomain>" to be a valid subdomain
+            $suffix = '.' . $baseDomain;
+            if (substr($requestDomain, -strlen($suffix)) === $suffix) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

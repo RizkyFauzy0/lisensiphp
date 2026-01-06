@@ -22,10 +22,9 @@ ob_start();
                             <i class="fas fa-globe mr-2"></i>Domain
                         </label>
                         <input type="text" id="domain" name="domain" value="<?= htmlspecialchars($license['domain']) ?>" required
-                               pattern="[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}"
                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                               placeholder="contoh: example.com">
-                        <p class="mt-1 text-sm text-gray-500">Format: example.com (tanpa http/https)</p>
+                               placeholder="contoh: domain.com, sub.domain.com, atau *.domain.com">
+                        <p class="mt-1 text-sm text-gray-500">Format: domain.com, sub.domain.com, atau *.domain.com untuk wildcard (tanpa http/https)</p>
                     </div>
 
                     <div>
