@@ -136,6 +136,14 @@ class LicenseController {
                 exit;
             }
 
+            // Auto-update status based on expiration date
+            if ($expiresAt && strtotime($expiresAt) < strtotime('today')) {
+                $status = 'expired';
+            } elseif ($status === 'expired' && (!$expiresAt || strtotime($expiresAt) >= strtotime('today'))) {
+                // If status was expired but expiration date is in future or null, set to active
+                $status = 'active';
+            }
+
             $result = $this->licenseModel->update($id, [
                 'domain' => $domain,
                 'status' => $status,
